@@ -17,13 +17,13 @@ type RedisDSN struct {
 	DbNum    int
 }
 
-var masterTravel RedisDSN
+var masterConfig RedisDSN
 
 type RedisStore struct {
 }
 
 func (dCon *RedisStore) init() {
-	masterTravel = ConfigRedis
+	masterConfig = ConfigRedis
 }
 
 var RedisNilErr error
@@ -38,17 +38,17 @@ func newPool() *redis.Pool {
 		MaxActive: 10, // max number of connections
 		IdleTimeout: 240 * time.Second,
 		Dial: func() (redis.Conn, error) {
-			c, err := redis.Dial("tcp", masterTravel.Host + ":" + masterTravel.Port)
+			c, err := redis.Dial("tcp", masterConfig.Host + ":" + masterConfig.Port)
 			if err != nil {
 				return nil, err
 			}
-			if masterTravel.Password != "" {
-				_, errAuth := c.Do("AUTH", masterTravel.Password)
+			if masterConfig.Password != "" {
+				_, errAuth := c.Do("AUTH", masterConfig.Password)
 				if errAuth != nil {
 					panic(errAuth) //worst case
 				}
 			}
-			_, err1 := c.Do("SELECT", masterTravel.DbNum) //here db num is sending
+			_, err1 := c.Do("SELECT", masterConfig.DbNum) //here db num is sending
 			if err1 != nil {
 				return nil, err
 			}
