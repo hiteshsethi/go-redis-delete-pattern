@@ -1,0 +1,8 @@
+/*
+    Written By: hiteshsethi
+    Time      : 23/08/16 4:06 PM 
+*/
+package main
+
+
+var ConfigRedis = RedisDSN{"127.0.0.1", "password", "6379", 2}
